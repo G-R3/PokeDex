@@ -1,45 +1,52 @@
 const limit = 150;
 const url = `https://pokeapi.co/api/v2/pokemon/?limit=${limit}`;
 
-const renderTypes = (container, types) => {
-  let typeHeading = document.createElement("span");
-  typeHeading.classList.add("type-heading");
-  typeHeading.innerHTML = "Type: ";
-  container.append(typeHeading);
+// get pokemon types to render
+const getPokemonTypes = (pokemonTypeContainer, types) => {
+  let typeHeader = document.createElement("span");
+  typeHeader.classList.add("type-heading");
+  typeHeader.innerHTML = "Type: ";
+  pokemonTypeContainer.append(typeHeader);
   types.forEach((pokemon) => {
-    console.log(pokemon);
-    let typeSpan = document.createElement("span");
-    typeSpan.classList.add("type", pokemon.type.name);
-    typeSpan.innerHTML = pokemon.type.name;
+    let type = document.createElement("span");
+    type.classList.add("type", pokemon.type.name);
+    type.innerHTML = pokemon.type.name;
 
-    container.append(typeSpan);
+    pokemonTypeContainer.append(type);
   });
 
-  return container;
+  return pokemonTypeContainer;
 };
 
 // render pokemon card
-const renderData = (pokeData) => {
-  console.log(pokeData);
-  let cardContainer = document.querySelector(".container-fluid");
+const renderData = (pokemon) => {
+  let cardContainer = document.querySelector(".container");
   let card = document.createElement("div");
-  let cardHeader = document.createElement("div");
   let cardBody = document.createElement("div");
-  let typeContainer = document.createElement("div");
+  let cardBodyHeader = document.createElement("div");
+  let pokemonTypeContainer = document.createElement("div");
+  let pokemonImgSrc = pokemon.sprites.other["official-artwork"].front_default;
 
-  cardHeader.classList.add("card-header");
+  // add classes for styling
+  card.classList.add("card");
   cardBody.classList.add("card-body");
-  cardHeader.innerHTML = `
-    <h1 class="card-header-tittle">${pokeData.name}</h1>
-    <span class="card-header-number">${pokeData.id}</span>`;
+  cardBodyHeader.classList.add("card-header");
+  pokemonTypeContainer.classList.add("type-container");
 
+  // card skeleton
   cardBody.innerHTML = `
     <div class="card-img">
-        <img class="img" src=${pokeData.sprites.front_default}>
+        <img class="pokemon-img" src=${pokemonImgSrc}>
     </div>`;
 
-  typeContainer = renderTypes(typeContainer, pokeData.types);
-  card.append(cardHeader, cardBody, typeContainer);
+  cardBodyHeader.innerHTML = `
+    <h2 class="pokemon-name">${pokemon.name}</h2>
+    <span class="pokemon-id">#${pokemon.id}</span>`;
+
+  pokemonTypeContainer = getPokemonTypes(pokemonTypeContainer, pokemon.types);
+
+  cardBody.append(cardBodyHeader, pokemonTypeContainer);
+  card.append(cardBody);
   cardContainer.appendChild(card);
 };
 
@@ -49,14 +56,14 @@ const getPokemonData = (results) => {
 
   fetch(pokemonURL)
     .then((response) => response.json())
-    .then((pokeData) => renderData(pokeData));
+    .then((pokemonData) => renderData(pokemonData));
 };
 
 // get all pokemons
 const fetchAllPokemon = () => {
   fetch(url).then((response) =>
-    response.json().then((pokemons) =>
-      pokemons.results.forEach((pokemon) => {
+    response.json().then((Allpokemon) =>
+      Allpokemon.results.forEach((pokemon) => {
         getPokemonData(pokemon);
       })
     )
