@@ -34,11 +34,15 @@ function renderData(pokemon) {
 
   const cardHTML = `
         <div class="card-img">
-            <img class="pokemon-img" src="${pokemonImgSrc}" alt="${pokemon.name}">
+            <img class="pokemon-img" src="${pokemonImgSrc}" alt="${
+    pokemon.name
+  }">
         </div>
         <div class="card-header">
           <h2 class="pokemon-name">${pokemon.name}</h2>
-          <span class="pokemon-id">${pokemon.id}</span>
+          <span class="pokemon-id">#${pokemon.id
+            .toString()
+            .padStart(3, "0")}</span>
         </div>`;
 
   card.innerHTML = cardHTML;
@@ -55,7 +59,6 @@ const getPokemonData = async () => {
     const res = await fetch(url);
     const pokemonData = await res.json();
 
-    console.log(pokemonData.id);
     renderData(pokemonData);
   }
 };
