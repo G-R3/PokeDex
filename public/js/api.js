@@ -48,20 +48,15 @@ function renderData(pokemon) {
 }
 
 // get individual pokemon data
-const getPokemonData = async (id) => {
-  const url = `https://pokeapi.co/api/v2/pokemon/${id}`;
-
-  const res = await fetch(url);
-  const pokemonData = await res.json();
-
-  renderData(pokemonData);
-};
-
-// get all pokemons
-const fetchAllPokemon = async () => {
+const getPokemonData = async () => {
   for (let i = 1; i <= limit; i++) {
-    getPokemonData(i);
+    const url = `https://pokeapi.co/api/v2/pokemon/${i}`;
+
+    const res = await fetch(url);
+    const pokemonData = await res.json();
+
+    console.log(pokemonData.id);
+    renderData(pokemonData);
   }
 };
-
-fetchAllPokemon();
+getPokemonData();
