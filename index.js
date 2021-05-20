@@ -13,6 +13,9 @@ app.set(path.join(__dirname, "/views"));
 app.get("/", (req, res) => {
   res.render("landing");
 });
+app.get("/about", (req, res) => {
+  res.render("about");
+});
 
 app.listen(PORT, (req, res) => {
   console.log(`Listening on PORT ${PORT}`);

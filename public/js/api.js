@@ -20,7 +20,7 @@ function getPokemonTypes(pokemonTypeContainer, types) {
 
 // render pokemon card
 function renderData(pokemon) {
-  let cardContainer = document.querySelector(".container");
+  let cardContainer = document.querySelector(".landing-container");
   let card = document.createElement("div");
   let pokemonTypeContainer = document.createElement("div");
   let pokemonImgSrc = pokemon.sprites.other["official-artwork"].front_default;

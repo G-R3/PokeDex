@@ -11,6 +11,7 @@ div.nav-container {
 }
 
 a {
+  position: relative;
   text-decoration: none;
   color: #202020;
 }
@@ -25,10 +26,24 @@ ul.nav {
   display: flex;
   padding: 0 1em;
 }
-li.nav-item {
-  font-size: 1.125em;
+.nav-link {
+  font-size: 1em;
   margin-right: 0.8em;
+  color: gray;
 }
-li.nav-item:hover {
-  text-decoration: underline;
+.nav-link::after {
+  content: "";
+  position: absolute;
+  background-color: red;
+  height: 4px;
+  width: 0;
+  left: 0;
+  bottom: -1px;
+  transition: 300ms all ease-in-out;
+}
+.nav-link:hover {
+  color: #202020;
+}
+.nav-link:hover::after {
+  width: 100%;
 }
