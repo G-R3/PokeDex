@@ -21,6 +21,24 @@ body {
 }
 
 /* Landing page styles */
+.searchWrapper {
+  width: 340px;
+  margin: 3em auto 1em auto;
+}
+#searchBar {
+  width: 100%;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 2px solid #808080;
+}
+#searchBar:hover,
+#searchBar:focus {
+  outline: none;
+  border-color: #202020;
+}
+
 .container {
   width: 95%;
   margin: 0 auto;
