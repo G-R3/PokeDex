@@ -1,65 +1,66 @@
-const limit = 150;
+let pokemonList = [];
+const pokedex = document.querySelector(".pokedex");
 
-// get pokemon types to render
-function getPokemonTypes(pokemonTypeContainer, types) {
-  let typeHeader = document.createElement("span");
+// get a pokemons type(s) so that they get their own individual HTML element
+// This way we can give the individual element a class name equal to the type name
+// it works lol
+function geTypes(types) {
+  const typeContainer = document.createElement("div");
+  types.forEach((element) => {
+    let span = document.createElement("span");
+    span.classList.add("type", element.type.name);
+    span.innerText = element.type.name;
 
-  typeHeader.classList.add("type-heading");
-  typeHeader.innerHTML = "Type: ";
-  pokemonTypeContainer.append(typeHeader);
-  types.forEach((pokemon) => {
-    let type = document.createElement("span");
-    type.classList.add("type", pokemon.type.name);
-    type.innerHTML = pokemon.type.name;
-
-    pokemonTypeContainer.append(type);
+    typeContainer.append(span);
   });
 
-  return pokemonTypeContainer.innerHTML;
+  return typeContainer.innerHTML;
 }
 
-// render pokemon card
-function renderData(pokemon) {
-  let cardContainer = document.querySelector(".container");
-  let card = document.createElement("div");
-  let pokemonTypeContainer = document.createElement("div");
-  let pokemonImgSrc = pokemon.sprites.other["official-artwork"].front_default;
+// display pokemons by creating an HTML template using string literals
+function displayPokemons(pokemonList) {
+  const htmlTemplate = pokemonList
+    .map((pokemon) => {
+      return `
+        <li class="pokemon">
+            <img src=${pokemon.imgURL} class="pokemonImg">
+            <div class="pokemonHeader">
+                <h2 class="pokemonName">${pokemon.name}</h2>
+                <p class="pokemonId">#${pokemon.id
+                  .toString()
+                  .padStart(3, "0")}</p>
+            </div>
+            <div class="typeContainer"> 
+                Type(s): ${geTypes(pokemon.type)}
+            </div>
+            
+        </li>
+      `;
+    })
+    .join("");
 
-  card.classList.add("card");
-  pokemonTypeContainer.classList.add("type-container");
-  pokemonTypeContainer.innerHTML = getPokemonTypes(
-    pokemonTypeContainer,
-    pokemon.types
-  );
-
-  const cardHTML = `
-        <div class="card-img">
-            <img class="pokemon-img" src="${pokemonImgSrc}" alt="${
-    pokemon.name
-  }">
-        </div>
-        <div class="card-header">
-          <h2 class="pokemon-name">${pokemon.name}</h2>
-          <span class="pokemon-id">#${pokemon.id
-            .toString()
-            .padStart(3, "0")}</span>
-        </div>`;
-
-  card.innerHTML = cardHTML;
-
-  card.append(pokemonTypeContainer);
-  cardContainer.append(card);
+  pokedex.innerHTML = htmlTemplate;
 }
 
-// get individual pokemon data
-const getPokemonData = async () => {
-  for (let i = 1; i <= limit; i++) {
+// fetch pokemons from API
+const getPokemons = () => {
+  const promises = [];
+  for (let i = 1; i <= 150; i++) {
     const url = `https://pokeapi.co/api/v2/pokemon/${i}`;
 
-    const res = await fetch(url);
-    const pokemonData = await res.json();
-
-    renderData(pokemonData);
+    promises.push(fetch(url).then((res) => res.json()));
   }
+
+  Promise.all(promises).then((results) => {
+    pokemonList = results.map((pokemon) => ({
+      name: pokemon.name,
+      id: pokemon.id,
+      imgURL: pokemon.sprites.other["official-artwork"].front_default,
+      type: pokemon.types,
+    }));
+
+    displayPokemons(pokemonList);
+  });
 };
-getPokemonData();
+
+getPokemons();
