@@ -1,5 +1,21 @@
 let pokemonList = [];
+let pokemTypes = [];
 const pokedex = document.querySelector(".pokedex");
+const searchBar = document.querySelector("#searchBar");
+
+// search for a pokemon
+searchBar.addEventListener("keyup", (e) => {
+  const searchQuery = e.target.value.toLowerCase();
+  const filtered = pokemonList.filter((pokemon) => {
+    return (
+      pokemon.name.toLowerCase().includes(searchQuery) ||
+      pokemon.type[0].type.name.toLowerCase().includes(searchQuery) // can only search by the first type: TODO -> check all types
+    );
+  });
+
+  // console.log(filtered);
+  displayPokemons(filtered); // display pokemons matching search string
+});
 
 // get a pokemons type(s) so that they get their own individual HTML element
 // This way we can give the individual element a class name equal to the type name
